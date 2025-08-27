@@ -3,264 +3,261 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>School Student Management</title>
+<title>🎓 School Student Management</title>
 
+<!-- Google Fonts & Icons -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <style>
-  :root{--accent:#0984e3;--muted:#7f8c8d;}
-  body{font-family:'Poppins',sans-serif;margin:0;background:#f5f6fa;color:#222}
-  header{background:#2d3436;color:#fff;padding:14px 20px;text-align:center;font-size:20px}
-  .container{max-width:1200px;margin:20px auto;padding:16px}
-  .grid{display:grid;grid-template-columns:1fr 380px;gap:20px}
+  :root{
+    --accent:#0984e3;
+    --accent-hover:#74b9ff;
+    --muted:#7f8c8d;
+    --bg:#f5f6fa;
+    --card-bg:#fff;
+  }
+  body{font-family:'Poppins',sans-serif;margin:0;background:var(--bg);color:#222;transition: all 0.3s;}
+  header{background:var(--accent);color:#fff;padding:16px 20px;text-align:center;font-size:22px;font-weight:600;box-shadow:0 3px 10px rgba(0,0,0,0.1);}
+  .container{max-width:1200px;margin:20px auto;padding:16px;}
+  .grid{display:grid;grid-template-columns:1fr 380px;gap:20px;}
   @media(max-width:980px){.grid{grid-template-columns:1fr}}
-  form.card, .panel{background:#fff;padding:16px;border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,0.06)}
-  h2{margin:0 0 12px 0;font-size:18px}
-  input,select,button,textarea{width:100%;padding:10px;margin:8px 0;border-radius:8px;border:1px solid #ddd;font-size:14px}
-  button{background:var(--accent);color:#fff;border:none;padding:10px 12px;cursor:pointer}
-  .small{font-size:13px;padding:8px}
-  .gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:12px}
-  .student-tile{background:#fff;padding:10px;border-radius:10px;box-shadow:0 3px 10px rgba(0,0,0,0.05);cursor:pointer;display:flex;flex-direction:column;gap:6px}
-  .id{font-weight:600;color:var(--muted);font-size:12px}
+  form.card, .panel{background:var(--card-bg);padding:20px;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.06);transition: transform 0.2s ease, box-shadow 0.2s ease;}
+  form.card:hover, .panel:hover{transform: translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.1);}
+  h2{margin:0 0 16px 0;font-size:20px;color:var(--accent)}
+  input,select,button,textarea{width:100%;padding:10px;margin:6px 0;border-radius:8px;border:1px solid #ddd;font-size:14px;transition: all 0.2s ease;}
+  input:focus, select:focus, textarea:focus{border-color:var(--accent);outline:none;box-shadow:0 0 5px rgba(0,132,227,0.3);}
+  button{background:var(--accent);color:#fff;border:none;padding:10px 12px;cursor:pointer;transition: background 0.3s ease, transform 0.2s ease;}
+  button:hover{background:var(--accent-hover); transform: translateY(-1px);}
+  .btn-danger{background:#e17055;} .btn-danger:hover{background:#ff7675;}
+  .download-btn{background:#2ecc71;} .download-btn:hover{background:#55efc4;}
+  .small{font-size:13px;padding:8px} .small-muted{font-size:13px;color:var(--muted)}
+  .gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:12px;}
+  .student-tile{background:var(--card-bg);padding:12px;border-radius:12px;box-shadow:0 3px 10px rgba(0,0,0,0.05);cursor:pointer;display:flex;flex-direction:column;gap:6px;transition: transform 0.2s ease, box-shadow 0.2s ease;}
+  .student-tile:hover{transform: translateY(-3px);box-shadow:0 8px 20px rgba(0,0,0,0.12);}
+  .student-tile .id{font-weight:600;color:var(--muted);font-size:12px}
   .actions{display:flex;gap:8px;justify-content:center;margin-top:8px}
-  .btn-danger{background:#e17055}
-  .search-row{display:flex;gap:8px;margin-bottom:8px}
-  .search-row input{flex:1}
+  .search-row{display:flex;gap:8px;margin-bottom:8px} .search-row input{flex:1; padding-left:10px; border-radius:10px; border:1px solid #ccc;} .search-row button{width:100px;}
   /* Modal */
-  .modal{position:fixed;inset:0;background:rgba(0,0,0,0.55);display:none;align-items:center;justify-content:center;padding:20px;z-index:999}
-  .modal.show{display:flex}
-  .modal-card{background:#fff;width:100%;max-width:1000px;border-radius:10px;padding:16px;max-height:90vh;overflow:auto}
-  .modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-  .tabs{display:flex;gap:8px;margin:10px 0 12px}
-  .tab{padding:8px 12px;border-radius:8px;background:#f1f2f6;cursor:pointer}
-  .tab.active{background:var(--accent);color:#fff}
-  .field-row{display:flex;gap:8px}
-  .field-row > *{flex:1}
-  .list-item{padding:10px;border-radius:8px;background:#fbfbfc;margin:8px 0;display:flex;justify-content:space-between;align-items:center;border:1px solid #eee}
-  .card-actions{display:flex;gap:8px}
-  .report-card{padding:10px;border-radius:8px;border:1px solid #eee;background:#fff;margin-bottom:8px}
-  .small-muted{font-size:13px;color:var(--muted)}
-  .download-btn{background:#2ecc71}
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,0.55);display:none;align-items:center;justify-content:center;padding:20px;z-index:999;animation:fadeIn 0.3s;}
+  .modal.show{display:flex;}
+  .modal-card{background:var(--card-bg);width:100%;max-width:1000px;border-radius:12px;padding:20px;max-height:90vh;overflow:auto;animation:slideIn 0.3s ease;}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}} @keyframes slideIn{from{transform:translateY(-30px);opacity:0}to{transform:translateY(0);opacity:1}}
+  .modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+  .tabs{display:flex;gap:8px;margin:12px 0 16px} .tab{padding:8px 16px;border-radius:8px;background:#f1f2f6;cursor:pointer;transition:all 0.2s ease;} .tab.active{background:var(--accent);color:#fff;}
+  .field-row{display:flex;gap:8px;flex-wrap:wrap} .field-row > *{flex:1}
+  .list-item{padding:10px;border-radius:10px;background:#fbfbfc;margin:8px 0;display:flex;justify-content:space-between;align-items:center;border:1px solid #eee;transition: transform 0.2s ease;}
+  .list-item:hover{transform: translateY(-2px);}
+  .report-card{padding:12px;border-radius:10px;border:1px solid #eee;background:#fff;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;gap:8px;transition: transform 0.2s ease, box-shadow 0.2s ease;}
+  .report-card:hover{transform: translateY(-3px);box-shadow:0 6px 18px rgba(0,0,0,0.08);}
+.animated-btn {
+  background: linear-gradient(90deg, #0984e3, #74b9ff);
+  color: #fff;
+  border: none;
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(0,132,227,0.3);
+}
+
+.animated-btn i {
+  margin-right: 8px;
+  transition: transform 0.3s ease;
+}
+
+/* Hover animation */
+.animated-btn:hover {
+  background: linear-gradient(90deg, #74b9ff, #0984e3);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 20px rgba(0,132,227,0.5);
+}
+
+.animated-btn:hover i {
+  transform: rotate(20deg);
+}
+
+/* Click animation */
+.animated-btn:active {
+  transform: translateY(1px) scale(0.98);
+  box-shadow: 0 4px 10px rgba(0,132,227,0.3);
+}
+
 </style>
 
-<!-- Chart.js -->
+<!-- Chart.js & html2canvas / jsPDF -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<!-- html2canvas & jsPDF for download -->
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 </head>
 <body>
-<header>School Student Management</header>
+<header>🎓 School Student Management</header>
 
 <div class="container">
   <div class="grid">
-    <!-- LEFT: Main forms & gallery -->
+    <!-- LEFT: Form & Gallery -->
     <div>
       <form id="studentForm" class="card">
-        <h2>Add / Edit Student</h2>
+        <h2>➕ Add / Edit Student</h2>
         <input type="hidden" id="docId" />
-        <label>Full Name</label>
+        <label>Full Name 📝</label>
         <input id="fullName" placeholder="Full name" required />
         <div class="field-row">
           <div>
-            <label>Age</label>
+            <label>Age 🎂</label>
             <input id="age" type="number" min="1" />
           </div>
           <div>
-            <label>Grade (A/B/C)</label>
+            <label>Grade (A/B/C) 🏫</label>
             <select id="grade">
               <option value="">Select</option>
-              <option>A</option><option>B</option><option>C</option>
+              <option>6A</option><option>6B</option><option>6C</option>
+<option>7A</option><option>7B</option><option>7C</option>
+<option>8A</option><option>8B</option><option>8C</option>
+<option>9A</option><option>9B</option><option>9C</option>
+<option>10A</option><option>10B</option><option>10C</option>
+<option>11A</option><option>11B</option><option>11C</option>
+<option>12A</option><option>12B</option><option>12C</option>
+<option>13A</option><option>13B</option><option>13C</option>
             </select>
           </div>
         </div>
         <div class="field-row">
           <div>
-            <label>Gender</label>
+            <label>Gender 👤</label>
             <select id="gender"><option value="">Select</option><option>Male</option><option>Female</option></select>
           </div>
           <div>
-            <label>Phone</label>
+            <label>Phone 📞</label>
             <input id="phone" placeholder="Phone number" />
           </div>
         </div>
-        <label>Guardian</label>
+        <label>Guardian 👪</label>
         <input id="guardian" placeholder="Guardian name" />
         <div style="display:flex;gap:8px;margin-top:8px">
-          <button id="saveStudent" type="button">Save Student</button>
+          <button id="saveStudent" type="button"><i class="fa fa-floppy-disk"></i> Save</button>
           <button id="clearForm" type="button" style="background:#b2bec3">Clear</button>
         </div>
       </form>
 
-      <div class="card" style="margin-top:12px">
-        <h2>Students</h2>
+      <div class="card" style="margin-top:16px">
+        <h2>👩‍🎓 Students</h2>
         <div class="search-row">
           <input id="searchInput" placeholder="Search by Student ID (e.g. STD162345...)" />
-          <button id="searchBtn" class="small">Search</button>
+          <button id="searchBtn" class="small">🔍 Search</button>
         </div>
         <div id="studentGallery" class="gallery"></div>
       </div>
     </div>
 
-    <!-- RIGHT: Quick info / help -->
+    <!-- RIGHT PANEL -->
     <div class="panel">
-      <h2>Quick Actions</h2>
+      <h2>⚡ Quick Actions</h2>
       <p class="small-muted">Click a student tile to open profile → inside profile use tabs for Reports / Behaviour / Wins.</p>
-      <p class="small-muted">You can edit or delete a student from the profile. Reports include chart + download feature.</p>
       <hr />
-      <p><strong>Firestore structure (used):</strong></p>
+      <p><strong>Firestore structure:</strong></p>
       <ul style="padding-left:18px">
         <li><code>students</code> (collection)</li>
         <li><code>students/{studentDoc}/reports</code></li>
         <li><code>students/{studentDoc}/behaviours</code></li>
         <li><code>students/{studentDoc}/wins</code></li>
       </ul>
+<button id="forTeachersBtn" class="btn animated-btn">
+  <i class="fa fa-chalkboard-teacher"></i> For Teachers
+</button>
     </div>
   </div>
+
+
 </div>
 
-<!-- Modal -->
+<!-- MODAL -->
 <div id="modal" class="modal">
   <div class="modal-card">
     <div class="modal-header">
       <h2 id="modalTitle">Student Profile</h2>
-      <div>
-        <button id="closeModal" style="background:#dfe6e9;color:#111;padding:8px 10px">Close</button>
-      </div>
+      <button id="closeModal" style="cursor:pointer;">✖</button>
     </div>
 
-    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-      <div style="min-width:140px">
-        <div style="background:#f7f9fb;padding:12px;border-radius:8px;text-align:center">
-          <div id="profileName" style="font-weight:700"></div>
-          <div id="profileId" class="small-muted"></div>
-          <div id="profileGrade" class="small-muted"></div>
-        </div>
-      </div>
-
-      <div style="flex:1">
-        <div class="tabs">
-          <div class="tab active" data-tab="details">Details</div>
-          <div class="tab" data-tab="reports">Reports</div>
-          <div class="tab" data-tab="behaviour">Behaviour</div>
-          <div class="tab" data-tab="wins">Wins</div>
-        </div>
-
-        <div id="tabContent">
-          <!-- DETAILS -->
-          <div data-panel="details">
-            <div style="display:flex;gap:8px;flex-wrap:wrap">
-              <div style="flex:1">
-                <p><strong>Age:</strong> <span id="p_age"></span></p>
-                <p><strong>Gender:</strong> <span id="p_gender"></span></p>
-              </div>
-              <div style="flex:1">
-                <p><strong>Guardian:</strong> <span id="p_guardian"></span></p>
-                <p><strong>Phone:</strong> <span id="p_phone"></span></p>
-              </div>
-            </div>
-
-            <div style="margin-top:10px;display:flex;gap:8px">
-              <button id="editStudentBtn" style="background:#fdcb6e;color:#111">Edit Student</button>
-              <button id="deleteStudentBtn" class="btn-danger">Delete Student</button>
-            </div>
-          </div>
-
-          <!-- REPORTS -->
-          <div data-panel="reports" style="display:none">
-            <div style="display:flex;gap:8px;flex-wrap:wrap">
-              <div style="flex:1">
-                <label>Year</label>
-                <input id="reportYear" placeholder="e.g. 2025" />
-              </div>
-              <div style="flex:1">
-                <label>Place</label>
-                <input id="reportPlace" placeholder="Place (optional)" />
-              </div>
-            </div>
-
-            <div style="margin-top:10px">
-              <h4 class="small-muted">Subjects & Marks</h4>
-              <div id="subjectList"></div>
-              <div style="display:flex;gap:8px;margin-top:8px">
-                <input id="subjectName" placeholder="Subject name" />
-                <input id="subjectMarks" type="number" placeholder="Marks" />
-                <button id="addSubjectBtn">Add Subject</button>
-              </div>
-
-              <div style="margin-top:10px">
-                <p><strong>Total:</strong> <span id="marksTotal">0</span></p>
-                <div style="display:flex;gap:8px;margin-top:8px">
-                  <button id="saveReportBtn">Save Report</button>
-                  <button id="downloadReportBtn" class="download-btn">Download Report</button>
-                </div>
-              </div>
-
-              <div style="margin-top:12px">
-                <canvas id="marksChart" height="160"></canvas>
-              </div>
-            </div>
-
-            <hr />
-            <div>
-              <h4>Previous Reports</h4>
-              <div id="reportsList"></div>
-            </div>
-          </div>
-
-          <!-- BEHAVIOUR -->
-          <div data-panel="behaviour" style="display:none">
-            <h4>Add Behaviour</h4>
-            <div style="display:flex;gap:8px;flex-wrap:wrap">
-              <input id="behDate" type="date" />
-              <input id="behReason" placeholder="Reason" />
-              <select id="behType"><option value="">Type</option><option>Correct</option><option>Wrong</option></select>
-              <button id="addBehBtn">Add</button>
-            </div>
-
-            <div style="margin-top:12px">
-              <h4>Behaviour Log</h4>
-              <div id="behaviourList"></div>
-            </div>
-          </div>
-
-          <!-- WINS -->
-          <div data-panel="wins" style="display:none">
-            <h4>Add Win</h4>
-            <div style="display:flex;gap:8px;flex-wrap:wrap">
-              <input id="winDate" type="date" />
-              <input id="winComp" placeholder="Competition" />
-              <input id="winPlace" placeholder="Place / Badge" />
-              <button id="addWinBtn">Add</button>
-            </div>
-
-            <div style="margin-top:12px">
-              <h4>Wins</h4>
-              <div id="winsList"></div>
-            </div>
-          </div>
-
-        </div>
-
-      </div>
+    <div class="tabs">
+      <div class="tab active" data-tab="details">Details</div>
+      <div class="tab" data-tab="reports">Reports</div>
+      <div class="tab" data-tab="behaviour">Behaviour</div>
+      <div class="tab" data-tab="wins">Wins</div>
     </div>
+
+    <div data-panel="details">
+      <p><strong>Name:</strong> <span id="profileName"></span></p>
+      <p><strong>ID:</strong> <span id="profileId"></span></p>
+      <p><strong>Grade:</strong> <span id="profileGrade"></span></p>
+      <p><strong>Age:</strong> <span id="p_age"></span></p>
+      <p><strong>Gender:</strong> <span id="p_gender"></span></p>
+      <p><strong>Guardian:</strong> <span id="p_guardian"></span></p>
+      <p><strong>Phone:</strong> <span id="p_phone"></span></p>
+      <button id="editStudentBtn" class="small">Edit Student</button>
+      <button id="deleteStudentBtn" class="small btn-danger">Delete Student</button>
+    </div>
+
+    <div data-panel="reports" style="display:none">
+      <input id="reportYear" placeholder="Year" />
+      <input id="reportPlace" placeholder="Place" />
+      <div class="field-row">
+        <input id="subjectName" placeholder="Subject" />
+        <input id="subjectMarks" placeholder="Marks" type="number" />
+        <button id="addSubjectBtn" class="small">Add</button>
+      </div>
+      <div id="subjectList"></div>
+      <p><strong>Total:</strong> <span id="marksTotal">0</span></p>
+      <canvas id="marksChart" style="width:100%;height:200px"></canvas>
+      <button id="saveReportBtn" class="small">Save Report</button>
+      <button id="downloadReportBtn" class="small download-btn">Download Report</button>
+      <div id="reportsList"></div>
+    </div>
+
+    <div data-panel="behaviour" style="display:none">
+      <input id="behDate" type="date" />
+      <input id="behReason" placeholder="Reason" />
+      <select id="behType"><option value="">Type</option><option>Good</option><option>Bad</option></select>
+      <button id="addBehBtn" class="small">Add Behaviour</button>
+      <div id="behaviourList"></div>
+    </div>
+
+    <div data-panel="wins" style="display:none">
+      <input id="winDate" type="date" />
+      <input id="winComp" placeholder="Competition" />
+      <input id="winPlace" placeholder="Place" />
+      <button id="addWinBtn" class="small">Add Win</button>
+      <div id="winsList"></div>
+    </div>
+
   </div>
 </div>
 
-<!-- Firebase modular SDK -->
+<!-- FIREBASE & APP LOGIC -->
 <script type="module">
-/* ===========================
-   FIREBASE INITIALIZATION
-   =========================== */
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  // paste all your JS here, including Firebase initialization, CRUD, reports, behaviour, wins
+  // use the same JS you had, now marksChartCtx will correctly find the canvas
+// ====== FIREBASE SETUP ======
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-app.js";
 import {
-  getFirestore, collection, addDoc, getDocs, doc, getDoc,
-  updateDoc, deleteDoc, query, where, orderBy
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs,
+  updateDoc,
+  deleteDoc,
+  doc,
+  query,
+  where
+} from "https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDFNj9un4xsHzNEp4HjaKeFNuCCt-5GNxA",
+ apiKey: "AIzaSyDFNj9un4xsHzNEp4HjaKeFNuCCt-5GNxA",
   authDomain: "lucifer-e6969.firebaseapp.com",
   projectId: "lucifer-e6969",
   storageBucket: "lucifer-e6969.firebasestorage.app",
@@ -272,20 +269,29 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-/* ===========================
-   DOM REFERENCES
-   =========================== */
+// ====== GLOBAL VARIABLES ======
+let students = [];
+let selectedStudent = null;
+
+// ====== DOM ELEMENTS ======
 const studentForm = document.getElementById('studentForm');
-const saveStudentBtn = document.getElementById('saveStudent');
-const clearFormBtn = document.getElementById('clearForm');
+const fullName = document.getElementById('fullName');
+const age = document.getElementById('age');
+const grade = document.getElementById('grade');
+const gender = document.getElementById('gender');
+const phone = document.getElementById('phone');
+const guardian = document.getElementById('guardian');
+const docIdInput = document.getElementById('docId');
+const saveBtn = document.getElementById('saveStudent');
+const clearBtn = document.getElementById('clearForm');
 const studentGallery = document.getElementById('studentGallery');
 const searchInput = document.getElementById('searchInput');
 const searchBtn = document.getElementById('searchBtn');
 
+// MODAL ELEMENTS
 const modal = document.getElementById('modal');
-const closeModal = document.getElementById('closeModal');
+const closeModalBtn = document.getElementById('closeModal');
 const modalTitle = document.getElementById('modalTitle');
-
 const profileName = document.getElementById('profileName');
 const profileId = document.getElementById('profileId');
 const profileGrade = document.getElementById('profileGrade');
@@ -293,534 +299,176 @@ const p_age = document.getElementById('p_age');
 const p_gender = document.getElementById('p_gender');
 const p_guardian = document.getElementById('p_guardian');
 const p_phone = document.getElementById('p_phone');
-
 const editStudentBtn = document.getElementById('editStudentBtn');
 const deleteStudentBtn = document.getElementById('deleteStudentBtn');
 
-/* REPORTS DOM */
-const reportYear = document.getElementById('reportYear');
-const reportPlace = document.getElementById('reportPlace');
-const subjectList = document.getElementById('subjectList');
+// REPORTS
 const subjectName = document.getElementById('subjectName');
 const subjectMarks = document.getElementById('subjectMarks');
 const addSubjectBtn = document.getElementById('addSubjectBtn');
+const subjectList = document.getElementById('subjectList');
 const marksTotal = document.getElementById('marksTotal');
 const saveReportBtn = document.getElementById('saveReportBtn');
 const downloadReportBtn = document.getElementById('downloadReportBtn');
-const reportsList = document.getElementById('reportsList');
 const marksChartCtx = document.getElementById('marksChart').getContext('2d');
 
-let marksChart = null;
-let currentSubjects = []; // {name, marks}
+let reportSubjects = [];
+let marksChart = new Chart(marksChartCtx, {
+  type: 'bar',
+  data: { labels: [], datasets: [{ label:'Marks', data:[], backgroundColor:'#0984e3' }] },
+  options:{ responsive:true, scales:{ y:{ beginAtZero:true } } }
+});
 
-/* BEHAVIOUR DOM */
-const behDate = document.getElementById('behDate');
-const behReason = document.getElementById('behReason');
-const behType = document.getElementById('behType');
-const addBehBtn = document.getElementById('addBehBtn');
-const behaviourList = document.getElementById('behaviourList');
-
-/* WINS DOM */
-const winDate = document.getElementById('winDate');
-const winComp = document.getElementById('winComp');
-const winPlace = document.getElementById('winPlace');
-const addWinBtn = document.getElementById('addWinBtn');
-const winsList = document.getElementById('winsList');
-
-/* TABS */
-const tabs = document.querySelectorAll('.tab');
-const panels = document.querySelectorAll('[data-panel]');
-
-/* FORM FIELDS */
-const docIdField = document.getElementById('docId');
-const fullNameField = document.getElementById('fullName');
-const ageField = document.getElementById('age');
-const gradeField = document.getElementById('grade');
-const genderField = document.getElementById('gender');
-const guardianField = document.getElementById('guardian');
-const phoneField = document.getElementById('phone');
-
-/* App state */
-let currentStudentDocId = null; // Firestore doc id
-let currentStudentData = null;
-
-/* ===========================
-   UTILS
-   =========================== */
-function uid() {
-  return 'STD' + Date.now().toString(36).toUpperCase();
-}
-function clearForm(){
-  docIdField.value=''; fullNameField.value=''; ageField.value=''; gradeField.value=''; genderField.value=''; guardianField.value=''; phoneField.value='';
-  currentStudentDocId = null;
-}
-function showToast(msg){
-  alert(msg);
-}
-
-/* ===========================
-   STUDENT CRUD
-   =========================== */
-async function saveStudent(){
-  const name = fullNameField.value.trim();
-  if(!name){ return showToast('Enter full name'); }
-  const payload = {
-    fullName: name,
-    age: ageField.value || '',
-    grade: gradeField.value || '',
-    gender: genderField.value || '',
-    guardian: guardianField.value || '',
-    phone: phoneField.value || '',
-    studentId: currentStudentData?.studentId || uid(),
-    createdAt: currentStudentData?.createdAt || Date.now()
-  };
-
-  if(currentStudentDocId){
-    // update
-    const dRef = doc(db,'students',currentStudentDocId);
-    await updateDoc(dRef,payload);
-    showToast('Student updated');
-  } else {
-    // add
-    const col = collection(db,'students');
-    const docRef = await addDoc(col,payload);
-    currentStudentDocId = docRef.id;
-    showToast('Student added');
-  }
-  clearForm();
-  await loadStudents();
-}
-
-/* Load all students */
-async function loadStudents(qId){
+// ====== FUNCTIONS ======
+// Load all students
+async function loadStudents(){
+  students = [];
   studentGallery.innerHTML = '';
-  const col = collection(db,'students');
-  const snaps = await getDocs(col);
-  snaps.forEach(snap=>{
-    const d = snap.data();
-    const tile = document.createElement('div');
-    tile.className='student-tile';
-    tile.innerHTML = `<div style="font-weight:700">${d.fullName}</div>
-                      <div class="id">${d.studentId}</div>
-                      <div class="small-muted">${d.grade ? 'Grade '+d.grade : ''}</div>`;
-    tile.onclick = ()=> openProfile(snap.id);
-    studentGallery.appendChild(tile);
+  const querySnapshot = await getDocs(collection(db,"students"));
+  querySnapshot.forEach(docSnap=>{
+    let data = docSnap.data();
+    data.id = docSnap.id;
+    students.push(data);
+    addStudentTile(data);
   });
 }
 
-/* Search by studentId string */
-async function searchStudent(){
-  const q = searchInput.value.trim();
-  if(!q) return loadStudents();
-  const col = collection(db,'students');
-  const qSnap = query(col, where('studentId','==', q));
-  const res = await getDocs(qSnap);
-  studentGallery.innerHTML='';
-  res.forEach(s=>{
-    const d = s.data();
-    const tile = document.createElement('div');
-    tile.className='student-tile';
-    tile.innerHTML = `<div style="font-weight:700">${d.fullName}</div>
-                      <div class="id">${d.studentId}</div>
-                      <div class="small-muted">${d.grade ? 'Grade '+d.grade : ''}</div>`;
-    tile.onclick = ()=> openProfile(s.id);
-    studentGallery.appendChild(tile);
-  });
+// Add tile to gallery
+function addStudentTile(student){
+  const div = document.createElement('div');
+  div.className = 'student-tile';
+  div.innerHTML = `<strong>${student.fullName}</strong><div class="id">${student.id}</div>`;
+  div.addEventListener('click',()=>openModal(student));
+  studentGallery.appendChild(div);
 }
 
-/* ===========================
-   PROFILE (modal) & tabs
-   =========================== */
-
-function openModal(){
+// Open Modal
+function openModal(student){
+  selectedStudent = student;
   modal.classList.add('show');
+  modalTitle.textContent = student.fullName + ' Profile';
+  profileName.textContent = student.fullName;
+  profileId.textContent = student.id;
+  profileGrade.textContent = student.grade;
+  p_age.textContent = student.age;
+  p_gender.textContent = student.gender;
+  p_guardian.textContent = student.guardian;
+  p_phone.textContent = student.phone;
+  // clear reports
+  reportSubjects=[];
+  subjectList.innerHTML='';
+  marksTotal.textContent='0';
+  marksChart.data.labels=[];
+  marksChart.data.datasets[0].data=[];
+  marksChart.update();
 }
-function closeModalFunc(){
-  modal.classList.remove('show');
-  // reset report UI
-  resetReportUI();
-}
-closeModal.addEventListener('click', closeModalFunc);
 
-tabs.forEach(t=>{
-  t.addEventListener('click', ()=>{
-    tabs.forEach(x=>x.classList.remove('active'));
-    t.classList.add('active');
-    const which = t.dataset.tab;
-    panels.forEach(p=>{
-      p.style.display = (p.dataset.panel===which)?'block':'none';
-    });
-    // load content for tab if needed
-    if(which==='reports' && currentStudentDocId) loadReports();
-    if(which==='behaviour' && currentStudentDocId) loadBehaviour();
-    if(which==='wins' && currentStudentDocId) loadWins();
-  });
-});
+// Close Modal
+closeModalBtn.addEventListener('click',()=> modal.classList.remove('show'));
 
-async function openProfile(docId){
-  // fetch student doc
-  const dRef = doc(db,'students',docId);
-  const snap = await getDoc(dRef);
-  if(!snap.exists()){
-    showToast('Student not found');
-    return;
+// Clear Form
+clearBtn.addEventListener('click',()=> studentForm.reset());
+
+// Save / Add Student
+saveBtn.addEventListener('click', async()=>{
+  const data = {
+    fullName: fullName.value,
+    age: age.value,
+    grade: grade.value,
+    gender: gender.value,
+    phone: phone.value,
+    guardian: guardian.value
+  };
+  if(docIdInput.value){ // update
+    await updateDoc(doc(db,'students',docIdInput.value), data);
+  }else{ // add new
+    await addDoc(collection(db,'students'), data);
   }
-  currentStudentDocId = docId;
-  currentStudentData = snap.data();
-
-  // populate header
-  profileName.textContent = currentStudentData.fullName;
-  profileId.textContent = currentStudentData.studentId;
-  profileGrade.textContent = currentStudentData.grade ? 'Grade '+currentStudentData.grade : '';
-  p_age.textContent = currentStudentData.age || '-';
-  p_gender.textContent = currentStudentData.gender || '-';
-  p_guardian.textContent = currentStudentData.guardian || '-';
-  p_phone.textContent = currentStudentData.phone || '-';
-  modalTitle.textContent = currentStudentData.fullName;
-
-  // switch to details tab
-  tabs.forEach(x=>x.classList.remove('active'));
-  document.querySelector('.tab[data-tab="details"]').classList.add('active');
-  panels.forEach(p=>p.style.display = (p.dataset.panel==='details')?'block':'none');
-
-  openModal();
-}
-
-/* Edit student -> fill main form */
-editStudentBtn.addEventListener('click', async ()=>{
-  if(!currentStudentDocId) return;
-  const snap = await getDoc(doc(db,'students',currentStudentDocId));
-  if(!snap.exists()) return showToast('Not found');
-  const d = snap.data();
-  docIdField.value = currentStudentDocId;
-  fullNameField.value = d.fullName || '';
-  ageField.value = d.age || '';
-  gradeField.value = d.grade || '';
-  genderField.value = d.gender || '';
-  guardianField.value = d.guardian || '';
-  phoneField.value = d.phone || '';
-  // close modal so user can edit
-  closeModalFunc();
-});
-
-/* Delete student */
-deleteStudentBtn.addEventListener('click', async ()=>{
-  if(!currentStudentDocId) return;
-  if(!confirm('Delete this student and all their subcollections?')) return;
-  // delete subcollections would require functions or deletion per doc; for demo we delete student doc only
-  await deleteDoc(doc(db,'students',currentStudentDocId));
-  showToast('Student deleted (subcollections may remain - in production remove them too)');
-  closeModalFunc();
+  studentForm.reset();
+  docIdInput.value='';
   await loadStudents();
 });
 
-/* Save button */
-saveStudentBtn.addEventListener('click', saveStudent);
-clearFormBtn.addEventListener('click', clearForm);
-searchBtn.addEventListener('click', searchStudent);
-
-/* initialize */
-loadStudents();
-
-/* ===========================
-   REPORTS: add subjects, totals, chart, save, load, download
-   =========================== */
-
-function resetReportUI(){
-  currentSubjects = [];
-  subjectList.innerHTML = '';
-  marksTotal.textContent = '0';
-  reportYear.value = '';
-  reportPlace.value = '';
-  if(marksChart){ marksChart.destroy(); marksChart = null; }
-  reportsList.innerHTML = '';
-}
-
-/* add subject locally */
-addSubjectBtn.addEventListener('click', ()=>{
-  const name = subjectName.value.trim();
-  const marks = Number(subjectMarks.value || 0);
-  if(!name) return showToast('Enter subject name');
-  currentSubjects.push({name, marks});
-  renderSubjects();
-  subjectName.value=''; subjectMarks.value='';
-  updateTotalAndChart();
+// Search Student
+searchBtn.addEventListener('click',async()=>{
+  const searchId = searchInput.value.trim();
+  if(!searchId) return loadStudents();
+  studentGallery.innerHTML='';
+  const q = query(collection(db,'students'),where('__name__','==',searchId));
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach(docSnap=>{
+    let data = docSnap.data(); data.id=docSnap.id; students.push(data); addStudentTile(data);
+  });
 });
 
-function renderSubjects(){
-  subjectList.innerHTML = '';
-  currentSubjects.forEach((s,idx)=>{
-    const el = document.createElement('div');
-    el.className='list-item';
-    el.innerHTML = `<div><strong>${s.name}</strong><div class="small-muted">Marks: ${s.marks}</div></div>
-                    <div class="card-actions">
-                      <button class="small" data-idx="${idx}" onclick="removeSubject(event)">Remove</button>
-                    </div>`;
-    subjectList.appendChild(el);
-  });
-}
-window.removeSubject = function(e){
-  const i = Number(e.target.dataset.idx);
-  currentSubjects.splice(i,1);
-  renderSubjects();
-  updateTotalAndChart();
-};
+// Edit student from modal
+editStudentBtn.addEventListener('click',()=>{
+  if(!selectedStudent) return;
+  docIdInput.value = selectedStudent.id;
+  fullName.value = selectedStudent.fullName;
+  age.value = selectedStudent.age;
+  grade.value = selectedStudent.grade;
+  gender.value = selectedStudent.gender;
+  phone.value = selectedStudent.phone;
+  guardian.value = selectedStudent.guardian;
+  modal.classList.remove('show');
+});
 
-function updateTotalAndChart(){
-  const total = currentSubjects.reduce((a,b)=>a+(Number(b.marks)||0),0);
+// Delete student
+deleteStudentBtn.addEventListener('click',async()=>{
+  if(!selectedStudent) return;
+  if(confirm('Delete student?')){
+    await deleteDoc(doc(db,'students',selectedStudent.id));
+    modal.classList.remove('show');
+    await loadStudents();
+  }
+});
+
+// ====== REPORTS ======
+addSubjectBtn.addEventListener('click',()=>{
+  if(!subjectName.value || !subjectMarks.value) return;
+  const sub = {name:subjectName.value, marks:parseFloat(subjectMarks.value)};
+  reportSubjects.push(sub);
+  subjectList.innerHTML = reportSubjects.map(s=>`<div>${s.name} - ${s.marks}</div>`).join('');
+  const total = reportSubjects.reduce((a,b)=>a+b.marks,0);
   marksTotal.textContent = total;
-  drawChart();
-}
-
-/* draw line chart of marks (subjects on x) */
-function drawChart(){
-  const labels = currentSubjects.map(s=>s.name);
-  const data = currentSubjects.map(s=>s.marks);
-  if(marksChart) marksChart.destroy();
-  marksChart = new Chart(marksChartCtx, {
-    type: 'line',
-    data: {
-      labels,
-      datasets: [{
-        label: 'Marks',
-        data,
-        fill:false,
-        tension:0.3,
-        borderWidth:2
-      }]
-    },
-    options: {
-      responsive:true,
-      scales:{ y: { beginAtZero:true } }
-    }
-  });
-}
-
-/* Save report to Firestore under student's subcollection */
-saveReportBtn.addEventListener('click', async ()=>{
-  if(!currentStudentDocId) return showToast('Open a student first');
-  const year = reportYear.value.trim();
-  if(!year) return showToast('Enter year');
-  if(currentSubjects.length===0) return showToast('Add at least one subject');
-  const payload = {
-    year,
-    place: reportPlace.value || '',
-    subjects: currentSubjects,
-    total: currentSubjects.reduce((a,b)=>a+(Number(b.marks)||0),0),
-    createdAt: Date.now()
-  };
-  const colRef = collection(db,'students',currentStudentDocId,'reports');
-  await addDoc(colRef,payload);
-  showToast('Report saved');
-  // refresh list
-  loadReports();
+  marksChart.data.labels = reportSubjects.map(s=>s.name);
+  marksChart.data.datasets[0].data = reportSubjects.map(s=>s.marks);
+  marksChart.update();
+  subjectName.value=''; subjectMarks.value='';
 });
 
-/* load reports list */
-async function loadReports(){
-  reportsList.innerHTML = '';
-  // load current subjects? reset
-  resetReportUI();
-  const colRef = collection(db,'students',currentStudentDocId,'reports');
-  const snaps = await getDocs(colRef);
-  snaps.forEach(s=>{
-    const d = s.data();
-    const card = document.createElement('div');
-    card.className='report-card';
-    const created = new Date(d.createdAt).toLocaleString();
-    card.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center">
-                        <div><strong>Year: ${d.year}</strong> <div class="small-muted">${d.place || ''}</div></div>
-                        <div class="small-muted">${created}</div>
-                      </div>
-                      <div style="margin-top:8px">
-                        <button class="small" data-id="${s.id}" onclick="viewReport(event)">View</button>
-                        <button class="small download-btn" data-id="${s.id}" onclick="downloadReportById(event)">Download</button>
-                      </div>`;
-    reportsList.appendChild(card);
-  });
-}
-
-/* view report and populate UI with subjects and chart */
-window.viewReport = async function(e){
-  const id = e.target.dataset.id;
-  if(!id) return;
-  const rSnap = await getDoc(doc(db,'students',currentStudentDocId,'reports',id));
-  const d = rSnap.data();
-  reportYear.value = d.year;
-  reportPlace.value = d.place || '';
-  currentSubjects = d.subjects || [];
-  renderSubjects();
-  updateTotalAndChart();
-};
-
-/* download current report (the one currently in UI) as image+pdf */
-downloadReportBtn.addEventListener('click', async ()=>{
-  if(!currentStudentDocId) return showToast('Open a student and load/create a report first');
-  // build a report element in DOM invisibly
-  const reportEl = buildReportElement({
-    name: currentStudentData.fullName,
-    id: currentStudentData.studentId,
-    year: reportYear.value,
-    place: reportPlace.value,
-    subjects: currentSubjects,
-    total: currentSubjects.reduce((a,b)=>a+(Number(b.marks)||0),0)
-  });
-  await downloadElementAsPDF(reportEl, `${currentStudentData.studentId}_report_${reportYear.value || 'NA'}.pdf`);
+// Save Report
+saveReportBtn.addEventListener('click', async()=>{
+  if(!selectedStudent) return alert('Select a student');
+  const reportRef = collection(db,'students',selectedStudent.id,'reports');
+  await addDoc(reportRef,{subjects:reportSubjects, total:reportSubjects.reduce((a,b)=>a+b.marks,0), date:new Date().toISOString()});
+  alert('Report saved!');
 });
 
-/* download report by report id (server-saved) */
-window.downloadReportById = async function(e){
-  const id = e.target.dataset.id;
-  if(!id) return;
-  const rSnap = await getDoc(doc(db,'students',currentStudentDocId,'reports',id));
-  const d = rSnap.data();
-  const reportEl = buildReportElement({
-    name: currentStudentData.fullName,
-    id: currentStudentData.studentId,
-    year: d.year,
-    place: d.place || '',
-    subjects: d.subjects || [],
-    total: d.total || 0
+// Download Report
+downloadReportBtn.addEventListener('click', async()=>{
+  const element = document.querySelector('[data-panel="reports"]');
+  html2canvas(element).then(canvas=>{
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jspdf.jsPDF();
+    const imgProps = pdf.getImageProperties(imgData);
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+    pdf.addImage(imgData,'PNG',0,0,pdfWidth,pdfHeight);
+    pdf.save(`${selectedStudent.fullName}_report.pdf`);
   });
-  await downloadElementAsPDF(reportEl, `${currentStudentData.studentId}_report_${d.year || 'NA'}.pdf`);
-};
-
-/* helper to construct report DOM */
-function buildReportElement(obj){
-  const wrapper = document.createElement('div');
-  wrapper.style.width = '900px';
-  wrapper.style.padding = '24px';
-  wrapper.style.background = '#fff';
-  wrapper.style.color = '#222';
-  wrapper.style.fontFamily = 'Poppins, sans-serif';
-  wrapper.innerHTML = `<div style="text-align:center;margin-bottom:12px">
-    <h2 style="margin:0">${obj.name}</h2>
-    <div style="font-size:14px;color:#555">${obj.id} — Year: ${obj.year} ${obj.place? ' — '+obj.place : ''}</div>
-  </div>
-  <table style="width:100%;border-collapse:collapse;margin-top:12px">
-    <thead><tr><th style="text-align:left;padding:6px;border-bottom:1px solid #ddd">Subject</th><th style="text-align:right;padding:6px;border-bottom:1px solid #ddd">Marks</th></tr></thead>
-    <tbody>
-      ${obj.subjects.map(s=>`<tr><td style="padding:6px;border-bottom:1px solid #f1f1f1">${s.name}</td><td style="padding:6px;text-align:right;border-bottom:1px solid #f1f1f1">${s.marks}</td></tr>`).join('')}
-    </tbody>
-    <tfoot><tr><td style="padding:8px;font-weight:700">Total</td><td style="padding:8px;text-align:right;font-weight:700">${obj.total}</td></tr></tfoot>
-  </table>
-  <div style="margin-top:14px;text-align:center;color:#888;font-size:13px">Generated: ${new Date().toLocaleString()}</div>`;
-  document.body.appendChild(wrapper); // temporarily add so html2canvas works with fonts
-  return wrapper;
-}
-
-/* convert element to image/pdf and download */
-async function downloadElementAsPDF(el, filename){
-  // wait fonts maybe
-  await new Promise(r=>setTimeout(r,300));
-  const canvas = await html2canvas(el, {scale:2});
-  const imgData = canvas.toDataURL('image/png');
-  // create pdf
-  const { jsPDF } = window.jspdf;
-  const pdf = new jsPDF('p','pt','a4');
-  const pageWidth = pdf.internal.pageSize.getWidth();
-  const pageHeight = pdf.internal.pageSize.getHeight();
-  const imgProps = pdf.getImageProperties(imgData);
-  const imgWidth = pageWidth - 40;
-  const imgHeight = (imgProps.height * imgWidth) / imgProps.width;
-  pdf.addImage(imgData,'PNG',20,20,imgWidth,imgHeight);
-  pdf.save(filename);
-  // cleanup
-  el.remove();
-}
-
-/* download report when viewing saved one - wrapper used above */
-window.downloadReportById = window.downloadReportById; // keep
-
-/* ===========================
-   BEHAVIOUR: add & load
-   =========================== */
-addBehBtn.addEventListener('click', async ()=>{
-  if(!currentStudentDocId) return showToast('Open a student first');
-  const date = behDate.value;
-  const reason = behReason.value.trim();
-  const type = behType.value;
-  if(!date || !reason || !type) return showToast('Fill date, reason and type');
-  const payload = { date, reason, type, createdAt: Date.now() };
-  const col = collection(db,'students',currentStudentDocId,'behaviours');
-  await addDoc(col,payload);
-  showToast('Behaviour saved');
-  behDate.value=''; behReason.value=''; behType.value='';
-  loadBehaviour();
 });
 
-async function loadBehaviour(){
-  behaviourList.innerHTML = '';
-  const col = collection(db,'students',currentStudentDocId,'behaviours');
-  const snaps = await getDocs(col);
-  snaps.forEach(s=>{
-    const d = s.data();
-    const el = document.createElement('div');
-    el.className='list-item';
-    el.innerHTML = `<div><strong>${d.type}</strong><div class="small-muted">${d.date} — ${d.reason}</div></div>
-                    <div class="card-actions"><button class="small" onclick="removeBehaviour('${s.id}')">Remove</button></div>`;
-    behaviourList.appendChild(el);
-  });
-}
-window.removeBehaviour = async function(id){
-  if(!confirm('Remove this behaviour record?')) return;
-  await deleteDoc(doc(db,'students',currentStudentDocId,'behaviours',id));
-  loadBehaviour();
-};
-
-/* ===========================
-   WINS: add & load
-   =========================== */
-addWinBtn.addEventListener('click', async ()=>{
-  if(!currentStudentDocId) return showToast('Open a student first');
-  const date = winDate.value;
-  const comp = winComp.value.trim();
-  const place = winPlace.value.trim();
-  if(!date || !comp || !place) return showToast('Fill date, competition, place');
-  const payload = {date, competition: comp, place, createdAt: Date.now()};
-  const col = collection(db,'students',currentStudentDocId,'wins');
-  await addDoc(col,payload);
-  showToast('Win saved');
-  winDate.value=''; winComp.value=''; winPlace.value='';
-  loadWins();
+// ====== INITIAL LOAD ======
+loadStudents();
+const forTeachersBtn = document.getElementById('forTeachersBtn');
+forTeachersBtn.addEventListener('click', () => {
+  window.location.href = 'teacher.html';
 });
 
-async function loadWins(){
-  winsList.innerHTML = '';
-  const col = collection(db,'students',currentStudentDocId,'wins');
-  const snaps = await getDocs(col);
-  snaps.forEach(s=>{
-    const d = s.data();
-    const el = document.createElement('div');
-    el.className='list-item';
-    el.innerHTML = `<div><strong>${d.competition}</strong><div class="small-muted">${d.date} — ${d.place}</div></div>
-                    <div class="card-actions"><button class="small" onclick="removeWin('${s.id}')">Remove</button></div>`;
-    winsList.appendChild(el);
-  });
-}
-window.removeWin = async function(id){
-  if(!confirm('Remove this win record?')) return;
-  await deleteDoc(doc(db,'students',currentStudentDocId,'wins',id));
-  loadWins();
-};
-
-/* ===========================
-   Misc: load reports when tab opened, keep UI responsive
-   =========================== */
-
-/* Small UX: press Enter on search field runs search */
-searchInput.addEventListener('keyup', (e)=>{ if(e.key==='Enter') searchStudent(); });
-
-/* make sure to cleanup charts when modal closed */
-document.getElementById('closeModal').addEventListener('click', ()=>{
-  if(marksChart){ marksChart.destroy(); marksChart = null; }
-});
-
-/* remove possible modal on outside click */
-modal.addEventListener('click', (ev)=>{
-  if(ev.target === modal) closeModalFunc();
-});
 
 </script>
+
 </body>
 </html>
