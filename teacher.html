@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teacher Dashboard — Class Reports</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  body{font-family:'Poppins',sans-serif;margin:0;background:#f5f6fa;color:#222;padding:20px}
+  h2{margin-bottom:12px}
+  select,input,button{padding:8px 10px;margin:6px 0;border-radius:6px;border:1px solid #ccc;font-size:14px}
+  button{cursor:pointer;background:#0984e3;color:#fff;border:none}
+  table{width:100%;border-collapse:collapse;margin-top:12px}
+  th,td{border:1px solid #ddd;padding:6px;text-align:center}
+  th{background:#74b9ff;color:#fff}
+  .small{font-size:13px}
+  .subject-inputs{display:flex;gap:8px;margin:12px 0}
+  .subject-inputs input{flex:1}
+  .download-btn{background:#2ecc71;margin-top:12px}
+</style>
+<!-- Firebase SDK -->
+<script type="module" src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
+<script type="module" src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
+<!-- html2canvas & jsPDF -->
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+
+<h2>Teacher Dashboard — Class Reports</h2>
+
+<label>Choose Class:</label>
+<select id="classSelect">
+  <option value="">--Select--</option>
+  <!-- 6A-13C -->
+  <script>
+    const grades=['6','7','8','9','10','11','12','13'];
+    const sections=['A','B','C'];
+    grades.forEach(g=>sections.forEach(s=>{
+      document.write(`<option value="${g+s}">${g+s}</option>`);
+    }));
+  </script>
+</select>
+
+<div id="studentsSection" style="display:none">
+  <h3>Students in <span id="currentClass"></span></h3>
+  <div class="subject-inputs">
+    <input type="text" id="newSubject" placeholder="Subject name">
+    <button id="addSubjectBtn">Add Subject</button>
+  </div>
+  <table id="studentsTable">
+    <thead>
+      <tr>
+        <th>Student Name</th>
+        <th>Age</th>
+        <th>Gender</th>
+        <th>Guardian</th>
+        <th>Phone</th>
+        <!-- Subjects will append here -->
+        <th>Total</th>
+        <th>Average</th>
+        <th>Rank</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <button id="downloadBtn" class="download-btn">Download Report</button>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDFNj9un4xsHzNEp4HjaKeFNuCCt-5GNxA",
+  authDomain: "lucifer-e6969.firebaseapp.com",
+  projectId: "lucifer-e6969",
+  storageBucket: "lucifer-e6969.firebasestorage.app",
+  messagingSenderId: "470007367808",
+  appId: "1:470007367808:web:9c4315cb90442b243b7e65",
+  measurementId: "G-043D5Z6PGV"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+let subjects = [];
+const classSelect = document.getElementById('classSelect');
+const studentsSection = document.getElementById('studentsSection');
+const currentClassSpan = document.getElementById('currentClass');
+const studentsTableBody = document.querySelector('#studentsTable tbody');
+const newSubjectInput = document.getElementById('newSubject');
+const addSubjectBtn = document.getElementById('addSubjectBtn');
+const downloadBtn = document.getElementById('downloadBtn');
+
+let studentsData = [];
+
+// Load students when class selected
+classSelect.addEventListener('change', async ()=>{
+  const cls = classSelect.value;
+  if(!cls) { studentsSection.style.display='none'; return; }
+  currentClassSpan.textContent = cls;
+  studentsSection.style.display='block';
+  subjects = [];
+  renderTableHeader();
+  await loadStudents(cls);
+});
+
+// Add new subject
+addSubjectBtn.addEventListener('click', ()=>{
+  const sub = newSubjectInput.value.trim();
+  if(!sub || subjects.includes(sub)) return;
+  subjects.push(sub);
+  renderTableHeader();
+  renderTableRows();
+  newSubjectInput.value='';
+});
+
+// Fetch students from Firestore
+async function loadStudents(cls){
+  studentsTableBody.innerHTML='';
+  studentsData=[];
+  const col = collection(db,'students');
+  const q = query(col, where('grade','==',cls));
+  const snaps = await getDocs(q);
+  snaps.forEach(snap=>{
+    const d = snap.data();
+    studentsData.push({...d,total:0,average:0});
+  });
+  renderTableRows();
+}
+
+// Render table header
+function renderTableHeader(){
+  const thead = document.querySelector('#studentsTable thead tr');
+  thead.innerHTML = '<th>Student Name</th>';
+  subjects.forEach(sub=>thead.innerHTML+=`<th>${sub}</th>`);
+  thead.innerHTML += '<th>Total</th><th>Average</th><th>Rank</th>';
+}
+
+// Render table rows
+function renderTableRows(){
+  studentsTableBody.innerHTML='';
+  studentsData.forEach((s,idx)=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${s.fullName}</td>`; // only student name
+    subjects.forEach(sub=>{
+      tr.innerHTML += `<td contenteditable="true" data-sub="${sub}" data-idx="${idx}">${s[sub]||0}</td>`;
+    });
+    tr.innerHTML += `<td>${s.total || 0}</td><td>${s.average || 0}</td><td>${s.rank || ''}</td>`;
+    studentsTableBody.appendChild(tr);
+  });
+}
+
+// Calculate totals, averages, ranks
+function calculateTotals(){
+  studentsData.forEach((s,idx)=>{
+    let total=0;
+    subjects.forEach(sub=>{
+      const val = Number(studentsTableBody.querySelector(`td[data-sub="${sub}"][data-idx="${idx}"]`).textContent) || 0;
+      s[sub]=val;
+      total += val;
+    });
+    s.total = total;
+    s.average = subjects.length ? (total/subjects.length).toFixed(2) : 0;
+  });
+  const sorted = [...studentsData].sort((a,b)=>b.total - a.total);
+  studentsData.forEach(s=> s.rank = sorted.findIndex(x=>x.studentId===s.studentId)+1);
+}
+
+// Update table after editing marks
+studentsTableBody.addEventListener('input', (e)=>{
+  if(!e.target.dataset.sub) return;
+  calculateTotals();
+  renderTableRows();
+});
+
+// Download table as PDF/image
+downloadBtn.addEventListener('click', async ()=>{
+  const tableEl = document.querySelector('#studentsTable');
+  const clone = tableEl.cloneNode(true);
+  const wrapper = document.createElement('div');
+  wrapper.style.padding='24px';
+  wrapper.style.background='#fff';
+  wrapper.appendChild(clone);
+  document.body.appendChild(wrapper);
+  await new Promise(r=>setTimeout(r,200));
+  const canvas = await html2canvas(wrapper,{scale:2});
+  const imgData = canvas.toDataURL('image/png');
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF('p','pt','a4');
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const imgProps = pdf.getImageProperties(imgData);
+  const imgHeight = (imgProps.height * pageWidth)/imgProps.width;
+  pdf.addImage(imgData,'PNG',0,0,pageWidth,imgHeight);
+  pdf.save(`${classSelect.value}_report.pdf`);
+  wrapper.remove();
+});
+</script>
+
+
+</body>
+</html>
