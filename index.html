@@ -150,7 +150,7 @@ loginBtn.onclick = async () => {
     // Mark student as active
     await updateDoc(doc(db,"students",found.id), { active:true });
     // Redirect to profile page with docId
-    window.location.href = `profile.html?docId=${found.id}`;
+    window.location.href = `teacher.html?docId=${found.id}`;
   }else{
     alert("Invalid Student ID");
   }
@@ -158,3 +158,4 @@ loginBtn.onclick = async () => {
 </script>
 </body>
 </html>
+
