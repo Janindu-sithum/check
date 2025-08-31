@@ -3,98 +3,202 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Student Login</title>
+<title>Student Profile</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
 <style>
 body{
   font-family:'Poppins',sans-serif;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  height:100vh;
-  background:linear-gradient(135deg,#74ebd5,#ACB6E5);
+  padding:20px;
   margin:0;
+  background:linear-gradient(to right,#74ebd5,#ACB6E5);
 }
-.container{
+.profile{
   background:#fff;
-  padding:30px 25px;
+  padding:25px 30px;
   border-radius:12px;
-  box-shadow:0 10px 25px rgba(0,0,0,0.15);
-  width:320px;
-  text-align:center;
+  box-shadow:0 10px 20px rgba(0,0,0,0.15);
+  max-width:900px;
+  margin:auto;
+  animation: fadeIn 0.8s ease;
 }
-.container h2{
-  margin-bottom:20px;
+@keyframes fadeIn{
+  from {opacity:0; transform: translateY(20px);}
+  to {opacity:1; transform: translateY(0);}
+}
+h2{
+  margin-top:0;
+  font-size:28px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.data{
+  margin:10px 0;
+  padding:10px 15px;
+  background:#f9f9f9;
+  border-radius:8px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:16px;
+  transition:0.3s;
+}
+.data:hover{background:#e6f0ff;}
+.tabs{
+  display:flex;
+  margin-top:25px;
+  border-bottom:2px solid #ddd;
+}
+.tab{
+  padding:12px 25px;
+  cursor:pointer;
+  font-weight:600;
+  border-bottom:3px solid transparent;
+  transition:0.3s;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.tab.active{
+  border-bottom:3px solid #0984e3;
   color:#0984e3;
 }
-input{
-  padding:12px;
-  width:100%;
-  margin:10px 0;
-  border:1px solid #ccc;
-  border-radius:8px;
-  font-size:16px;
+.panel{display:none;padding-top:20px; animation: panelFade 0.5s ease;}
+.panel.active{display:block;}
+@keyframes panelFade{
+  from {opacity:0;}
+  to {opacity:1;}
 }
-input:focus{
-  outline:none;
-  border-color:#0984e3;
-  box-shadow:0 0 5px rgba(9,132,227,0.5);
+ul{list-style:none;padding:0;margin:0;}
+li{
+  padding:12px 15px;
+  margin-bottom:12px;
+  background:#f0f0f0;
+  border-radius:8px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  cursor:pointer;
+  transition:0.3s;
+}
+li:hover{background:#e0e0e0;}
+li button{
+  padding:6px 14px;
+  background:#0984e3;
+  color:#fff;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+  transition:0.3s;
+}
+li button:hover{
+  background:#0652dd;
 }
 button{
-  padding:12px;
+  padding:10px 18px;
   background:#0984e3;
   color:#fff;
   border:none;
   border-radius:8px;
   cursor:pointer;
-  width:100%;
-  font-weight:600;
-  margin-top:10px;
+  margin-top:15px;
   transition:0.3s;
+  font-weight:600;
 }
 button:hover{
   background:#0652dd;
-  transform:translateY(-2px);
+  transform: translateY(-2px);
 }
-.autocomplete-suggestions{
-  border:1px solid #ccc;
-  border-top:none;
-  max-height:150px;
-  overflow-y:auto;
-  background:#fff;
-  border-radius:0 0 8px 8px;
-  position:absolute;
-  width:calc(100% - 24px);
+/* LIGHTBOX */
+#lightbox{
+  display:none;
+  position:fixed;
+  top:0;left:0;width:100%;height:100%;
+  background:rgba(0,0,0,0.8);
+  justify-content:center;
+  align-items:center;
   z-index:999;
+  animation: fadeIn 0.4s ease;
 }
-.autocomplete-suggestion{
-  padding:10px;
-  cursor:pointer;
-  transition:0.2s;
-}
-.autocomplete-suggestion:hover{
-  background:#0984e3;
-  color:#fff;
-}
-.input-wrapper{
+#lightboxContent{
+  background:#fff;
+  padding:25px;
+  border-radius:12px;
+  max-width:600px;
+  width:90%;
+  max-height:90%;
+  overflow:auto;
   position:relative;
+  animation: slideUp 0.4s ease;
+}
+@keyframes slideUp{
+  from{transform: translateY(50px); opacity:0;}
+  to{transform: translateY(0); opacity:1;}
+}
+#lightboxClose{
+  position:absolute; top:12px; right:12px;
+  cursor:pointer; font-size:22px;
+  color:#333;
+}
+#lightboxBody h3{margin-top:0;color:#0984e3;}
+#lightboxBody ul li{
+  padding:6px 0;
+  border-bottom:1px solid #ddd;
+}
+.low-mark{color:red;font-weight:600;}
+/* RESPONSIVE */
+@media(max-width:600px){
+  .tabs{flex-direction:column;}
+  .tab{margin-bottom:5px;}
+  li{flex-direction:column;align-items:flex-start;}
 }
 </style>
 </head>
 <body>
 
-<div class="container">
-  <h2>Student Login</h2>
-  <div class="input-wrapper">
-    <input type="text" id="studentIdInput" placeholder="Enter Student ID">
-    <div id="suggestions" class="autocomplete-suggestions"></div>
+<div class="profile">
+  <h2><i class="fa-solid fa-user"></i> <span id="fullName"></span></h2>
+  <div class="data"><i class="fa-solid fa-id-badge"></i> ID: <span id="studentId"></span></div>
+  <div class="data"><i class="fa-solid fa-graduation-cap"></i> Grade: <span id="grade"></span></div>
+  <div class="data"><i class="fa-solid fa-calendar-days"></i> Age: <span id="age"></span></div>
+  <div class="data"><i class="fa-solid fa-venus-mars"></i> Gender: <span id="gender"></span></div>
+  <div class="data"><i class="fa-solid fa-user-group"></i> Guardian: <span id="guardian"></span></div>
+  <div class="data"><i class="fa-solid fa-phone"></i> Phone: <span id="phone"></span></div>
+
+  <div class="tabs">
+    <div class="tab active" data-tab="reportsPanel"><i class="fa-solid fa-file-lines"></i> Reports</div>
+    <div class="tab" data-tab="behaviourPanel"><i class="fa-solid fa-face-smile-beam"></i> Behaviour</div>
+    <div class="tab" data-tab="winsPanel"><i class="fa-solid fa-trophy"></i> Wins</div>
   </div>
-  <button id="loginBtn">Login</button>
+
+  <div class="panel active" id="reportsPanel">
+    <ul id="reportsList"></ul>
+  </div>
+
+  <div class="panel" id="behaviourPanel">
+    <ul id="behaviourList"></ul>
+  </div>
+
+  <div class="panel" id="winsPanel">
+    <ul id="winsList"></ul>
+  </div>
+
+  <button id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+  <button id="poloBearBtn"><i class="fa-solid fa-arrow-right"></i> Go to PoloBear</button>
+</div>
+
+<!-- LIGHTBOX -->
+<div id="lightbox">
+  <div id="lightboxContent">
+    <span id="lightboxClose">✖</span>
+    <div id="lightboxBody"></div>
+  </div>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, doc, getDoc, collection, getDocs, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDFNj9un4xsHzNEp4HjaKeFNuCCt-5GNxA",
@@ -108,53 +212,121 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-const loginBtn = document.getElementById('loginBtn');
-const studentIdInput = document.getElementById('studentIdInput');
-const suggestionsEl = document.getElementById('suggestions');
+const urlParams = new URLSearchParams(window.location.search);
+const docId = urlParams.get('docId');
 
-let studentList = [];
+const fullNameEl = document.getElementById('fullName');
+const studentIdEl = document.getElementById('studentId');
+const gradeEl = document.getElementById('grade');
+const ageEl = document.getElementById('age');
+const genderEl = document.getElementById('gender');
+const guardianEl = document.getElementById('guardian');
+const phoneEl = document.getElementById('phone');
 
-// Load all students for autocomplete
-async function loadStudents(){
-  const snaps = await getDocs(collection(db,"students"));
-  studentList = [];
-  snaps.forEach(s=>{
-    const d = s.data();
-    studentList.push({id:s.id, studentId:d.studentId});
-  });
-}
-loadStudents();
+const reportsList = document.getElementById('reportsList');
+const behaviourList = document.getElementById('behaviourList');
+const winsList = document.getElementById('winsList');
+const logoutBtn = document.getElementById('logoutBtn');
+const poloBearBtn = document.getElementById('poloBearBtn');
 
-// Autocomplete logic
-studentIdInput.addEventListener('input', ()=>{
-  const val = studentIdInput.value.trim().toLowerCase();
-  suggestionsEl.innerHTML='';
-  if(!val) return;
-  const filtered = studentList.filter(s=>s.studentId.toLowerCase().includes(val));
-  filtered.forEach(f=>{
-    const div = document.createElement('div');
-    div.classList.add('autocomplete-suggestion');
-    div.textContent = f.studentId;
-    div.onclick = ()=> { studentIdInput.value=f.studentId; suggestionsEl.innerHTML=''; };
-    suggestionsEl.appendChild(div);
+const tabs = document.querySelectorAll('.tab');
+const panels = document.querySelectorAll('.panel');
+
+const lightbox = document.getElementById('lightbox');
+const lightboxBody = document.getElementById('lightboxBody');
+const lightboxClose = document.getElementById('lightboxClose');
+
+/* TABS */
+tabs.forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    tabs.forEach(t=>t.classList.remove('active'));
+    panels.forEach(p=>p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(tab.dataset.tab).classList.add('active');
   });
 });
 
-// Login
-loginBtn.onclick = async () => {
-  const enteredId = studentIdInput.value.trim();
-  if(!enteredId){ alert("Enter Student ID"); return; }
-
-  const found = studentList.find(s=>s.studentId === enteredId);
-  if(found){
-    // Mark student as active
-    await updateDoc(doc(db,"students",found.id), { active:true });
-    // Redirect to profile page with docId
-    window.location.href = `profile.html?docId=${found.id}`;
-  }else{
-    alert("Invalid Student ID");
+/* LOAD PROFILE */
+async function loadProfile(){
+  const ref = doc(db,"students",docId);
+  const snap = await getDoc(ref);
+  if(snap.exists()){
+    const d = snap.data();
+    fullNameEl.textContent = d.fullName;
+    studentIdEl.textContent = d.studentId;
+    gradeEl.textContent = d.grade;
+    ageEl.textContent = d.age;
+    genderEl.textContent = d.gender;
+    guardianEl.textContent = d.guardian;
+    phoneEl.textContent = d.phone;
   }
+
+  /* Reports */
+  const repCol = collection(db,`students/${docId}/reports`);
+  const repSnaps = await getDocs(repCol);
+  reportsList.innerHTML='';
+  repSnaps.forEach(s=>{
+    const d = s.data();
+    const li = document.createElement('li');
+    li.innerHTML = `Year: <strong>${d.year}</strong> | Teacher: ${d.classTeacher} | Rank: ${d.rank || '-'} <button>Details</button>`;
+    li.querySelector('button').onclick = ()=>{
+      openLightbox(`
+        <h3>Report: ${d.year}</h3>
+        <p><strong>Class Teacher:</strong> ${d.classTeacher}</p>
+        <p><strong>Rank:</strong> ${d.rank || '-'}</p>
+        <p><strong>Subjects:</strong></p>
+        <ul>
+          ${d.subjects.map(x=>{
+            const cls = x.marks < 50 ? 'low-mark' : '';
+            return `<li class="${cls}">${x.name}: ${x.marks}</li>`;
+          }).join('')}
+        </ul>
+      `);
+    };
+    reportsList.appendChild(li);
+  });
+
+  /* Behaviour */
+  const behCol = collection(db,`students/${docId}/behaviours`);
+  const behSnaps = await getDocs(behCol);
+  behaviourList.innerHTML='';
+  behSnaps.forEach(s=>{
+    const d = s.data();
+    const li = document.createElement('li');
+    li.textContent = `${d.date} | ${d.type} | ${d.reason}`;
+    behaviourList.appendChild(li);
+  });
+
+  /* Wins */
+  const winCol = collection(db,`students/${docId}/wins`);
+  const winSnaps = await getDocs(winCol);
+  winsList.innerHTML='';
+  winSnaps.forEach(s=>{
+    const d = s.data();
+    const li = document.createElement('li');
+    li.textContent = `${d.date} | ${d.competition} | ${d.place}`;
+    winsList.appendChild(li);
+  });
+}
+
+/* LIGHTBOX */
+function openLightbox(content){
+  lightboxBody.innerHTML = content;
+  lightbox.style.display = 'flex';
+}
+lightboxClose.onclick = ()=> lightbox.style.display='none';
+lightbox.onclick = (e)=> {if(e.target===lightbox) lightbox.style.display='none';}
+
+/* LOGOUT */
+logoutBtn.onclick = async ()=>{
+  await updateDoc(doc(db,"students",docId), { active:false });
+  window.location.href = 'login.html';
 };
+
+/* POLOBEAR NAV */
+poloBearBtn.onclick = ()=> window.location.href='polobear.html';
+
+if(docId) loadProfile();
 </script>
 </body>
 </html>
