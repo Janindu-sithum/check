@@ -1,474 +1,160 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>🎓 School Student Management</title>
-
-<!-- Google Fonts & Icons -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Login</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
 <style>
-  :root{
-    --accent:#0984e3;
-    --accent-hover:#74b9ff;
-    --muted:#7f8c8d;
-    --bg:#f5f6fa;
-    --card-bg:#fff;
-  }
-  body{font-family:'Poppins',sans-serif;margin:0;background:var(--bg);color:#222;transition: all 0.3s;}
-  header{background:var(--accent);color:#fff;padding:16px 20px;text-align:center;font-size:22px;font-weight:600;box-shadow:0 3px 10px rgba(0,0,0,0.1);}
-  .container{max-width:1200px;margin:20px auto;padding:16px;}
-  .grid{display:grid;grid-template-columns:1fr 380px;gap:20px;}
-  @media(max-width:980px){.grid{grid-template-columns:1fr}}
-  form.card, .panel{background:var(--card-bg);padding:20px;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.06);transition: transform 0.2s ease, box-shadow 0.2s ease;}
-  form.card:hover, .panel:hover{transform: translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.1);}
-  h2{margin:0 0 16px 0;font-size:20px;color:var(--accent)}
-  input,select,button,textarea{width:100%;padding:10px;margin:6px 0;border-radius:8px;border:1px solid #ddd;font-size:14px;transition: all 0.2s ease;}
-  input:focus, select:focus, textarea:focus{border-color:var(--accent);outline:none;box-shadow:0 0 5px rgba(0,132,227,0.3);}
-  button{background:var(--accent);color:#fff;border:none;padding:10px 12px;cursor:pointer;transition: background 0.3s ease, transform 0.2s ease;}
-  button:hover{background:var(--accent-hover); transform: translateY(-1px);}
-  .btn-danger{background:#e17055;} .btn-danger:hover{background:#ff7675;}
-  .download-btn{background:#2ecc71;} .download-btn:hover{background:#55efc4;}
-  .small{font-size:13px;padding:8px} .small-muted{font-size:13px;color:var(--muted)}
-  .gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:12px;}
-  .student-tile{background:var(--card-bg);padding:12px;border-radius:12px;box-shadow:0 3px 10px rgba(0,0,0,0.05);cursor:pointer;display:flex;flex-direction:column;gap:6px;transition: transform 0.2s ease, box-shadow 0.2s ease;}
-  .student-tile:hover{transform: translateY(-3px);box-shadow:0 8px 20px rgba(0,0,0,0.12);}
-  .student-tile .id{font-weight:600;color:var(--muted);font-size:12px}
-  .actions{display:flex;gap:8px;justify-content:center;margin-top:8px}
-  .search-row{display:flex;gap:8px;margin-bottom:8px} .search-row input{flex:1; padding-left:10px; border-radius:10px; border:1px solid #ccc;} .search-row button{width:100px;}
-  /* Modal */
-  .modal{position:fixed;inset:0;background:rgba(0,0,0,0.55);display:none;align-items:center;justify-content:center;padding:20px;z-index:999;animation:fadeIn 0.3s;}
-  .modal.show{display:flex;}
-  .modal-card{background:var(--card-bg);width:100%;max-width:1000px;border-radius:12px;padding:20px;max-height:90vh;overflow:auto;animation:slideIn 0.3s ease;}
-  @keyframes fadeIn{from{opacity:0}to{opacity:1}} @keyframes slideIn{from{transform:translateY(-30px);opacity:0}to{transform:translateY(0);opacity:1}}
-  .modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-  .tabs{display:flex;gap:8px;margin:12px 0 16px} .tab{padding:8px 16px;border-radius:8px;background:#f1f2f6;cursor:pointer;transition:all 0.2s ease;} .tab.active{background:var(--accent);color:#fff;}
-  .field-row{display:flex;gap:8px;flex-wrap:wrap} .field-row > *{flex:1}
-  .list-item{padding:10px;border-radius:10px;background:#fbfbfc;margin:8px 0;display:flex;justify-content:space-between;align-items:center;border:1px solid #eee;transition: transform 0.2s ease;}
-  .list-item:hover{transform: translateY(-2px);}
-  .report-card{padding:12px;border-radius:10px;border:1px solid #eee;background:#fff;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;gap:8px;transition: transform 0.2s ease, box-shadow 0.2s ease;}
-  .report-card:hover{transform: translateY(-3px);box-shadow:0 6px 18px rgba(0,0,0,0.08);}
-.animated-btn {
-  background: linear-gradient(90deg, #0984e3, #74b9ff);
-  color: #fff;
-  border: none;
-  padding: 12px 20px;
-  font-size: 16px;
-  font-weight: 600;
-  border-radius: 10px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  transition: all 0.3s ease;
-  box-shadow: 0 5px 15px rgba(0,132,227,0.3);
+body{
+  font-family:'Poppins',sans-serif;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  background:linear-gradient(135deg,#74ebd5,#ACB6E5);
+  margin:0;
 }
-
-.animated-btn i {
-  margin-right: 8px;
-  transition: transform 0.3s ease;
+.container{
+  background:#fff;
+  padding:30px 25px;
+  border-radius:12px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.15);
+  width:320px;
+  text-align:center;
 }
-
-/* Hover animation */
-.animated-btn:hover {
-  background: linear-gradient(90deg, #74b9ff, #0984e3);
-  transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 8px 20px rgba(0,132,227,0.5);
+.container h2{
+  margin-bottom:20px;
+  color:#0984e3;
 }
-
-.animated-btn:hover i {
-  transform: rotate(20deg);
+input{
+  padding:12px;
+  width:100%;
+  margin:10px 0;
+  border:1px solid #ccc;
+  border-radius:8px;
+  font-size:16px;
 }
-
-/* Click animation */
-.animated-btn:active {
-  transform: translateY(1px) scale(0.98);
-  box-shadow: 0 4px 10px rgba(0,132,227,0.3);
+input:focus{
+  outline:none;
+  border-color:#0984e3;
+  box-shadow:0 0 5px rgba(9,132,227,0.5);
 }
-
+button{
+  padding:12px;
+  background:#0984e3;
+  color:#fff;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  width:100%;
+  font-weight:600;
+  margin-top:10px;
+  transition:0.3s;
+}
+button:hover{
+  background:#0652dd;
+  transform:translateY(-2px);
+}
+.autocomplete-suggestions{
+  border:1px solid #ccc;
+  border-top:none;
+  max-height:150px;
+  overflow-y:auto;
+  background:#fff;
+  border-radius:0 0 8px 8px;
+  position:absolute;
+  width:calc(100% - 24px);
+  z-index:999;
+}
+.autocomplete-suggestion{
+  padding:10px;
+  cursor:pointer;
+  transition:0.2s;
+}
+.autocomplete-suggestion:hover{
+  background:#0984e3;
+  color:#fff;
+}
+.input-wrapper{
+  position:relative;
+}
 </style>
-
-<!-- Chart.js & html2canvas / jsPDF -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
 </head>
 <body>
-<header>🎓 School Student Management</header>
 
 <div class="container">
-  <div class="grid">
-    <!-- LEFT: Form & Gallery -->
-    <div>
-      <form id="studentForm" class="card">
-        <h2>➕ Add / Edit Student</h2>
-        <input type="hidden" id="docId" />
-        <label>Full Name 📝</label>
-        <input id="fullName" placeholder="Full name" required />
-        <div class="field-row">
-          <div>
-            <label>Age 🎂</label>
-            <input id="age" type="number" min="1" />
-          </div>
-          <div>
-            <label>Grade (A/B/C) 🏫</label>
-            <select id="grade">
-              <option value="">Select</option>
-              <option>6A</option><option>6B</option><option>6C</option>
-<option>7A</option><option>7B</option><option>7C</option>
-<option>8A</option><option>8B</option><option>8C</option>
-<option>9A</option><option>9B</option><option>9C</option>
-<option>10A</option><option>10B</option><option>10C</option>
-<option>11A</option><option>11B</option><option>11C</option>
-<option>12A</option><option>12B</option><option>12C</option>
-<option>13A</option><option>13B</option><option>13C</option>
-            </select>
-          </div>
-        </div>
-        <div class="field-row">
-          <div>
-            <label>Gender 👤</label>
-            <select id="gender"><option value="">Select</option><option>Male</option><option>Female</option></select>
-          </div>
-          <div>
-            <label>Phone 📞</label>
-            <input id="phone" placeholder="Phone number" />
-          </div>
-        </div>
-        <label>Guardian 👪</label>
-        <input id="guardian" placeholder="Guardian name" />
-        <div style="display:flex;gap:8px;margin-top:8px">
-          <button id="saveStudent" type="button"><i class="fa fa-floppy-disk"></i> Save</button>
-          <button id="clearForm" type="button" style="background:#b2bec3">Clear</button>
-        </div>
-      </form>
-
-      <div class="card" style="margin-top:16px">
-        <h2>👩‍🎓 Students</h2>
-        <div class="search-row">
-          <input id="searchInput" placeholder="Search by Student ID (e.g. STD162345...)" />
-          <button id="searchBtn" class="small">🔍 Search</button>
-        </div>
-        <div id="studentGallery" class="gallery"></div>
-      </div>
-    </div>
-
-    <!-- RIGHT PANEL -->
-    <div class="panel">
-      <h2>⚡ Quick Actions</h2>
-      <p class="small-muted">Click a student tile to open profile → inside profile use tabs for Reports / Behaviour / Wins.</p>
-      <hr />
-      <p><strong>Firestore structure:</strong></p>
-      <ul style="padding-left:18px">
-        <li><code>students</code> (collection)</li>
-        <li><code>students/{studentDoc}/reports</code></li>
-        <li><code>students/{studentDoc}/behaviours</code></li>
-        <li><code>students/{studentDoc}/wins</code></li>
-      </ul>
-<button id="forTeachersBtn" class="btn animated-btn">
-  <i class="fa fa-chalkboard-teacher"></i> For Teachers
-</button>
-    </div>
+  <h2>Student Login</h2>
+  <div class="input-wrapper">
+    <input type="text" id="studentIdInput" placeholder="Enter Student ID">
+    <div id="suggestions" class="autocomplete-suggestions"></div>
   </div>
-
-
+  <button id="loginBtn">Login</button>
 </div>
 
-<!-- MODAL -->
-<div id="modal" class="modal">
-  <div class="modal-card">
-    <div class="modal-header">
-      <h2 id="modalTitle">Student Profile</h2>
-      <button id="closeModal" style="cursor:pointer;">✖</button>
-    </div>
-
-    <div class="tabs">
-      <div class="tab active" data-tab="details">Details</div>
-      <div class="tab" data-tab="reports">Reports</div>
-      <div class="tab" data-tab="behaviour">Behaviour</div>
-      <div class="tab" data-tab="wins">Wins</div>
-    </div>
-
-    <div data-panel="details">
-      <p><strong>Name:</strong> <span id="profileName"></span></p>
-      <p><strong>ID:</strong> <span id="profileId"></span></p>
-      <p><strong>Grade:</strong> <span id="profileGrade"></span></p>
-      <p><strong>Age:</strong> <span id="p_age"></span></p>
-      <p><strong>Gender:</strong> <span id="p_gender"></span></p>
-      <p><strong>Guardian:</strong> <span id="p_guardian"></span></p>
-      <p><strong>Phone:</strong> <span id="p_phone"></span></p>
-      <button id="editStudentBtn" class="small">Edit Student</button>
-      <button id="deleteStudentBtn" class="small btn-danger">Delete Student</button>
-    </div>
-
-    <div data-panel="reports" style="display:none">
-      <input id="reportYear" placeholder="Year" />
-      <input id="reportPlace" placeholder="Place" />
-      <div class="field-row">
-        <input id="subjectName" placeholder="Subject" />
-        <input id="subjectMarks" placeholder="Marks" type="number" />
-        <button id="addSubjectBtn" class="small">Add</button>
-      </div>
-      <div id="subjectList"></div>
-      <p><strong>Total:</strong> <span id="marksTotal">0</span></p>
-      <canvas id="marksChart" style="width:100%;height:200px"></canvas>
-      <button id="saveReportBtn" class="small">Save Report</button>
-      <button id="downloadReportBtn" class="small download-btn">Download Report</button>
-      <div id="reportsList"></div>
-    </div>
-
-    <div data-panel="behaviour" style="display:none">
-      <input id="behDate" type="date" />
-      <input id="behReason" placeholder="Reason" />
-      <select id="behType"><option value="">Type</option><option>Good</option><option>Bad</option></select>
-      <button id="addBehBtn" class="small">Add Behaviour</button>
-      <div id="behaviourList"></div>
-    </div>
-
-    <div data-panel="wins" style="display:none">
-      <input id="winDate" type="date" />
-      <input id="winComp" placeholder="Competition" />
-      <input id="winPlace" placeholder="Place" />
-      <button id="addWinBtn" class="small">Add Win</button>
-      <div id="winsList"></div>
-    </div>
-
-  </div>
-</div>
-
-<!-- FIREBASE & APP LOGIC -->
 <script type="module">
-  // paste all your JS here, including Firebase initialization, CRUD, reports, behaviour, wins
-  // use the same JS you had, now marksChartCtx will correctly find the canvas
-// ====== FIREBASE SETUP ======
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-app.js";
-import {
-  getFirestore,
-  collection,
-  addDoc,
-  getDocs,
-  updateDoc,
-  deleteDoc,
-  doc,
-  query,
-  where
-} from "https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
- apiKey: "AIzaSyDFNj9un4xsHzNEp4HjaKeFNuCCt-5GNxA",
+  apiKey: "AIzaSyDFNj9un4xsHzNEp4HjaKeFNuCCt-5GNxA",
   authDomain: "lucifer-e6969.firebaseapp.com",
   projectId: "lucifer-e6969",
-  storageBucket: "lucifer-e6969.firebasestorage.app",
+  storageBucket: "lucifer-e6969.appspot.com",
   messagingSenderId: "470007367808",
   appId: "1:470007367808:web:9c4315cb90442b243b7e65",
   measurementId: "G-043D5Z6PGV"
 };
-
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// ====== GLOBAL VARIABLES ======
-let students = [];
-let selectedStudent = null;
+const loginBtn = document.getElementById('loginBtn');
+const studentIdInput = document.getElementById('studentIdInput');
+const suggestionsEl = document.getElementById('suggestions');
 
-// ====== DOM ELEMENTS ======
-const studentForm = document.getElementById('studentForm');
-const fullName = document.getElementById('fullName');
-const age = document.getElementById('age');
-const grade = document.getElementById('grade');
-const gender = document.getElementById('gender');
-const phone = document.getElementById('phone');
-const guardian = document.getElementById('guardian');
-const docIdInput = document.getElementById('docId');
-const saveBtn = document.getElementById('saveStudent');
-const clearBtn = document.getElementById('clearForm');
-const studentGallery = document.getElementById('studentGallery');
-const searchInput = document.getElementById('searchInput');
-const searchBtn = document.getElementById('searchBtn');
+let studentList = [];
 
-// MODAL ELEMENTS
-const modal = document.getElementById('modal');
-const closeModalBtn = document.getElementById('closeModal');
-const modalTitle = document.getElementById('modalTitle');
-const profileName = document.getElementById('profileName');
-const profileId = document.getElementById('profileId');
-const profileGrade = document.getElementById('profileGrade');
-const p_age = document.getElementById('p_age');
-const p_gender = document.getElementById('p_gender');
-const p_guardian = document.getElementById('p_guardian');
-const p_phone = document.getElementById('p_phone');
-const editStudentBtn = document.getElementById('editStudentBtn');
-const deleteStudentBtn = document.getElementById('deleteStudentBtn');
-
-// REPORTS
-const subjectName = document.getElementById('subjectName');
-const subjectMarks = document.getElementById('subjectMarks');
-const addSubjectBtn = document.getElementById('addSubjectBtn');
-const subjectList = document.getElementById('subjectList');
-const marksTotal = document.getElementById('marksTotal');
-const saveReportBtn = document.getElementById('saveReportBtn');
-const downloadReportBtn = document.getElementById('downloadReportBtn');
-const marksChartCtx = document.getElementById('marksChart').getContext('2d');
-
-let reportSubjects = [];
-let marksChart = new Chart(marksChartCtx, {
-  type: 'bar',
-  data: { labels: [], datasets: [{ label:'Marks', data:[], backgroundColor:'#0984e3' }] },
-  options:{ responsive:true, scales:{ y:{ beginAtZero:true } } }
-});
-
-// ====== FUNCTIONS ======
-// Load all students
+// Load all students for autocomplete
 async function loadStudents(){
-  students = [];
-  studentGallery.innerHTML = '';
-  const querySnapshot = await getDocs(collection(db,"students"));
-  querySnapshot.forEach(docSnap=>{
-    let data = docSnap.data();
-    data.id = docSnap.id;
-    students.push(data);
-    addStudentTile(data);
+  const snaps = await getDocs(collection(db,"students"));
+  studentList = [];
+  snaps.forEach(s=>{
+    const d = s.data();
+    studentList.push({id:s.id, studentId:d.studentId});
   });
 }
-
-// Add tile to gallery
-function addStudentTile(student){
-  const div = document.createElement('div');
-  div.className = 'student-tile';
-  div.innerHTML = `<strong>${student.fullName}</strong><div class="id">${student.id}</div>`;
-  div.addEventListener('click',()=>openModal(student));
-  studentGallery.appendChild(div);
-}
-
-// Open Modal
-function openModal(student){
-  selectedStudent = student;
-  modal.classList.add('show');
-  modalTitle.textContent = student.fullName + ' Profile';
-  profileName.textContent = student.fullName;
-  profileId.textContent = student.id;
-  profileGrade.textContent = student.grade;
-  p_age.textContent = student.age;
-  p_gender.textContent = student.gender;
-  p_guardian.textContent = student.guardian;
-  p_phone.textContent = student.phone;
-  // clear reports
-  reportSubjects=[];
-  subjectList.innerHTML='';
-  marksTotal.textContent='0';
-  marksChart.data.labels=[];
-  marksChart.data.datasets[0].data=[];
-  marksChart.update();
-}
-
-// Close Modal
-closeModalBtn.addEventListener('click',()=> modal.classList.remove('show'));
-
-// Clear Form
-clearBtn.addEventListener('click',()=> studentForm.reset());
-
-// Save / Add Student
-saveBtn.addEventListener('click', async()=>{
-  const data = {
-    fullName: fullName.value,
-    age: age.value,
-    grade: grade.value,
-    gender: gender.value,
-    phone: phone.value,
-    guardian: guardian.value
-  };
-  if(docIdInput.value){ // update
-    await updateDoc(doc(db,'students',docIdInput.value), data);
-  }else{ // add new
-    await addDoc(collection(db,'students'), data);
-  }
-  studentForm.reset();
-  docIdInput.value='';
-  await loadStudents();
-});
-
-// Search Student
-searchBtn.addEventListener('click',async()=>{
-  const searchId = searchInput.value.trim();
-  if(!searchId) return loadStudents();
-  studentGallery.innerHTML='';
-  const q = query(collection(db,'students'),where('__name__','==',searchId));
-  const querySnapshot = await getDocs(q);
-  querySnapshot.forEach(docSnap=>{
-    let data = docSnap.data(); data.id=docSnap.id; students.push(data); addStudentTile(data);
-  });
-});
-
-// Edit student from modal
-editStudentBtn.addEventListener('click',()=>{
-  if(!selectedStudent) return;
-  docIdInput.value = selectedStudent.id;
-  fullName.value = selectedStudent.fullName;
-  age.value = selectedStudent.age;
-  grade.value = selectedStudent.grade;
-  gender.value = selectedStudent.gender;
-  phone.value = selectedStudent.phone;
-  guardian.value = selectedStudent.guardian;
-  modal.classList.remove('show');
-});
-
-// Delete student
-deleteStudentBtn.addEventListener('click',async()=>{
-  if(!selectedStudent) return;
-  if(confirm('Delete student?')){
-    await deleteDoc(doc(db,'students',selectedStudent.id));
-    modal.classList.remove('show');
-    await loadStudents();
-  }
-});
-
-// ====== REPORTS ======
-addSubjectBtn.addEventListener('click',()=>{
-  if(!subjectName.value || !subjectMarks.value) return;
-  const sub = {name:subjectName.value, marks:parseFloat(subjectMarks.value)};
-  reportSubjects.push(sub);
-  subjectList.innerHTML = reportSubjects.map(s=>`<div>${s.name} - ${s.marks}</div>`).join('');
-  const total = reportSubjects.reduce((a,b)=>a+b.marks,0);
-  marksTotal.textContent = total;
-  marksChart.data.labels = reportSubjects.map(s=>s.name);
-  marksChart.data.datasets[0].data = reportSubjects.map(s=>s.marks);
-  marksChart.update();
-  subjectName.value=''; subjectMarks.value='';
-});
-
-// Save Report
-saveReportBtn.addEventListener('click', async()=>{
-  if(!selectedStudent) return alert('Select a student');
-  const reportRef = collection(db,'students',selectedStudent.id,'reports');
-  await addDoc(reportRef,{subjects:reportSubjects, total:reportSubjects.reduce((a,b)=>a+b.marks,0), date:new Date().toISOString()});
-  alert('Report saved!');
-});
-
-// Download Report
-downloadReportBtn.addEventListener('click', async()=>{
-  const element = document.querySelector('[data-panel="reports"]');
-  html2canvas(element).then(canvas=>{
-    const imgData = canvas.toDataURL('image/png');
-    const pdf = new jspdf.jsPDF();
-    const imgProps = pdf.getImageProperties(imgData);
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-    pdf.addImage(imgData,'PNG',0,0,pdfWidth,pdfHeight);
-    pdf.save(`${selectedStudent.fullName}_report.pdf`);
-  });
-});
-
-// ====== INITIAL LOAD ======
 loadStudents();
-const forTeachersBtn = document.getElementById('forTeachersBtn');
-forTeachersBtn.addEventListener('click', () => {
-  window.location.href = 'teacher.html';
+
+// Autocomplete logic
+studentIdInput.addEventListener('input', ()=>{
+  const val = studentIdInput.value.trim().toLowerCase();
+  suggestionsEl.innerHTML='';
+  if(!val) return;
+  const filtered = studentList.filter(s=>s.studentId.toLowerCase().includes(val));
+  filtered.forEach(f=>{
+    const div = document.createElement('div');
+    div.classList.add('autocomplete-suggestion');
+    div.textContent = f.studentId;
+    div.onclick = ()=> { studentIdInput.value=f.studentId; suggestionsEl.innerHTML=''; };
+    suggestionsEl.appendChild(div);
+  });
 });
 
+// Login
+loginBtn.onclick = async () => {
+  const enteredId = studentIdInput.value.trim();
+  if(!enteredId){ alert("Enter Student ID"); return; }
 
+  const found = studentList.find(s=>s.studentId === enteredId);
+  if(found){
+    // Mark student as active
+    await updateDoc(doc(db,"students",found.id), { active:true });
+    // Redirect to profile page with docId
+    window.location.href = `profile.html?docId=${found.id}`;
+  }else{
+    alert("Invalid Student ID");
+  }
+};
 </script>
-
 </body>
 </html>
